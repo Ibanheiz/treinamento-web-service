@@ -40,7 +40,9 @@ public class ClienteResource  implements Serializable  {
 	@POST
 	public Response salvar(Cliente cliente) {
 		try {
-			clienteService.salvar(cliente);
+			
+			System.out.println(cliente);
+//			clienteService.salvar(cliente);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
@@ -51,7 +53,14 @@ public class ClienteResource  implements Serializable  {
 	@PUT
 	@Path("{id}")
 	public Response alterar(@PathParam("id") String id, Cliente cliente) {
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		cliente.setId(Integer.parseInt(id));
+		try {
+			clienteService.alterar(cliente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+		} 
+		return Response.ok(cliente).build();
 	}
 	
 	@DELETE

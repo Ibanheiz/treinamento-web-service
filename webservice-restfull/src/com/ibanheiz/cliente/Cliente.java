@@ -32,7 +32,7 @@ public class Cliente implements Serializable {
 	private String nome;
 
 	// bi-directional many-to-one association to Telefone
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Telefone> telefones;
 
 	public Cliente() {

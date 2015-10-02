@@ -41,6 +41,22 @@ public class DAO<T> implements Serializable {
 		}
 	}
 	
+	/**
+	 * @author Nicolas Ibanheiz | 22/09/2015
+	 * @param objeto
+	 */
+	public void update(T objeto) {
+		entityManager.getTransaction().begin();
+		try {
+			entityManager.merge(objeto);
+			entityManager.getTransaction().commit();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			entityManager.getTransaction().rollback();
+		}
+	}
+	
 	// TODO update
 	
 	// TODO delete

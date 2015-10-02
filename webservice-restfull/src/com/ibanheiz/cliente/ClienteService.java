@@ -10,14 +10,18 @@ public class ClienteService implements Serializable {
 	private static final long serialVersionUID = 4763420234363367959L;
 
 	@Inject
-	private ClienteDAO ClienteDAO;
+	private ClienteDAO clienteDAO;
 
 	@SuppressWarnings("unchecked")
 	public List<Cliente> buscarTodos() {
-		return ClienteDAO.buscarTodos();
+		return clienteDAO.buscarTodos();
 	}
 
 	public void salvar(Cliente cliente) {
-		ClienteDAO.save(cliente);
+		clienteDAO.save(cliente);
+	}
+
+	public void alterar(Cliente cliente) {
+		clienteDAO.update(cliente);
 	}
 }
