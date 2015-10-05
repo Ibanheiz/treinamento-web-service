@@ -20,36 +20,39 @@ import javax.ws.rs.core.Response.Status;
 
 import com.ibanheiz.cliente.Cliente;
 import com.ibanheiz.cliente.ClienteService;
+import com.ibanheiz.utils.RestfullUtils;
 
 @Path("/clientes")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Singleton
-public class ClienteResource  implements Serializable  {
+public class ClienteResource implements Serializable {
 	private static final long serialVersionUID = -6997135368312026507L;
 
 	@Inject
 	private ClienteService clienteService;
-	
+
 	@GET
 	public Response buscarTodos() {
 		List<Cliente> clientes = clienteService.buscarTodos();
 		return Response.ok(clientes.toArray(new Cliente[clientes.size()])).build();
 	}
-	
+
 	@POST
 	public Response salvar(Cliente cliente) {
 		try {
-			
-			System.out.println(cliente);
-//			clienteService.salvar(cliente);
+			RestfullUtils.preencherReferenciaNasListas(cliente);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-		} 
+		}
+
+		clienteService.salvar(cliente);
+		if (cliente.getId() == 0) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
 		return Response.ok(cliente).build();
 	}
-	
+
 	@PUT
 	@Path("{id}")
 	public Response alterar(@PathParam("id") String id, Cliente cliente) {
@@ -59,14 +62,14 @@ public class ClienteResource  implements Serializable  {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-		} 
+		}
 		return Response.ok(cliente).build();
 	}
-	
+
 	@DELETE
 	@Path("{id}")
 	public Response remover(@PathParam("id") String id) {
 		return Response.status(Status.NOT_IMPLEMENTED).build();
 	}
-	
+
 }

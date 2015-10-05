@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.ibanheiz.telefone.Telefone;
+import com.ibanheiz.utils.XmlSetReferences;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class Cliente implements Serializable {
 
 	// bi-directional many-to-one association to Telefone
 	@OneToMany(mappedBy = "cliente", cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@XmlSetReferences(classe=Telefone.class, getter="getTelefones")
 	private List<Telefone> telefones;
 
 	public Cliente() {
