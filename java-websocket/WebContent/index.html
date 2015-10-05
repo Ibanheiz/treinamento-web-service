@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chatizin</title>
+</head>
+<style type="text/css">
+.output {
+	width: 100%;
+	height: 300px;
+	background: #EEE;
+	margin: 50px 0;
+	padding: 30px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	font-size: 20px;
+}
+</style>
+<body>
+	<h1>Chat do Ibanheiz</h1>
+	<div class="output" id="output"></div>
+	<form action="">
+		<input type="text" name="username" placeholder="Nome de Usuário" id="username"/>
+		<br /> <br /> <br /> 
+		<input type="text" name="message" placeholder="Escreva uma mensagem" id="message" /> 
+		<input type="button" onclick="sendMessage()" value="Enviar" />
+	</form>
+	<script type="text/javascript">
+			var wsUri = "ws://localhost:8080/java-websocket/chat";
+			var output = document.getElementById('output');
+			var input = document.getElementById('message');
+			var username = document.getElementById('username');
+			console.log(username);
+			var websocket = new WebSocket(wsUri);
+
+			websocket.onopen = function () {
+				writeMessage("Abrindo conexão...");
+			}
+
+			websocket.onmessage = function (event) {
+				writeMessage(event.data);
+			}
+
+			websocket.onclose = function () {
+				writeMessage("Fechando conexão");
+			}
+
+			websocket.onerror = function (event) {
+				writeMessage("Erro: " + event);
+			}
+			
+			function sendMessage() {
+				if(!validar()) {
+					return;
+				}
+				console.log("Enviando: " + input.value);
+				var json = buildUserJson(input.value);
+				websocket.send(json);
+				input.value = '';
+			}
+
+			function buildUserJson(message) {
+				return '{"name":"' + username.value + '", "message" : "' + message +'"}';
+			}
+
+			function writeMessage(message) {
+				var container = document.createElement("div");
+				container.innerHTML = message;
+				output.appendChild(container);
+			}
+
+			function validar() {
+				console.log(username.value);
+				if (username.value == '') {
+					alert('Preencha o nome de usuário');
+					return false;
+				}
+				if (input.value == '') {
+					alert('Escreva uma mensagem');
+					return false;
+				}
+				return true;
+			}
+		</script>
+</body>
+</html>
